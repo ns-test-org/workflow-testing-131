@@ -14,6 +14,7 @@ export default function PacManGame() {
   const [score, setScore] = useState(0);
   const [gameOver, setGameOver] = useState(false);
   const [gameStarted, setGameStarted] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(true);
   
   const pacmanRef = useRef<Position>({ x: 10, y: 10 });
   const directionRef = useRef<Direction>('RIGHT');
@@ -170,11 +171,11 @@ export default function PacManGame() {
     if (!ctx) return;
 
     // Clear canvas
-    ctx.fillStyle = '#000';
+    ctx.fillStyle = isDarkMode ? '#000' : '#f0f0f0';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     // Draw dots
-    ctx.fillStyle = '#fff';
+    ctx.fillStyle = isDarkMode ? '#fff' : '#333';
     for (let y = 0; y < GRID_SIZE; y++) {
       for (let x = 0; x < GRID_SIZE; x++) {
         if (dotsRef.current[y]?.[x]) {
@@ -223,21 +224,35 @@ export default function PacManGame() {
     });
   };
 
-  // Initial draw
+  // Initial draw and redraw on theme change
   useEffect(() => {
     draw();
-  }, []);
+  }, [isDarkMode]);
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-black text-white p-4">
-      <h1 className="text-4xl font-bold mb-4">PAC-MAN</h1>
+    <div className={`flex flex-col items-center justify-center min-h-screen p-4 transition-colors ${
+      isDarkMode ? 'bg-black text-white' : 'bg-white text-black'
+    }`}>
+      <div className="flex items-center gap-4 mb-4">
+        <h1 className="text-4xl font-bold">PAC-MAN v2</h1>
+        <button
+          onClick={() => setIsDarkMode(!isDarkMode)}
+          className={`px-4 py-2 rounded-lg font-semibold transition-colors ${
+            isDarkMode 
+              ? 'bg-yellow-400 text-black hover:bg-yellow-300' 
+              : 'bg-gray-800 text-white hover:bg-gray-700'
+          }`}
+        >
+          {isDarkMode ? '☀️ Light' : '🌙 Dark'}
+        </button>
+      </div>
       <div className="mb-4 text-2xl">Score: {score}</div>
       
       <canvas
         ref={canvasRef}
         width={GRID_SIZE * CELL_SIZE}
         height={GRID_SIZE * CELL_SIZE}
-        className="border-4 border-blue-500"
+        className={`border-4 ${isDarkMode ? 'border-blue-500' : 'border-blue-600'}`}
       />
       
       <div className="mt-4 text-center">
@@ -252,10 +267,17 @@ export default function PacManGame() {
         )}
       </div>
       
-      <div className="mt-4 text-sm text-gray-400">
+      <div className={`mt-4 text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
         <p>Use Arrow Keys or WASD to move</p>
       </div>
     </div>
   );
 }
+
+
+
+
+
+
+
 
