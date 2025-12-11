@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Build anything from a chat",
+  title: "v2",
   description: "Turn chats into apps. Prompt. Ship. Repeat.",
 };
 
@@ -32,3 +32,4 @@ export default function RootLayout({
     </html>
   );
 }
+
